@@ -5,7 +5,7 @@ import pandas as pd
 class T2IDataset(Dataset):
     def __init__(self, file_path):
         with open(file_path, "r", encoding="utf-8") as file:
-            self.lines = [line.strip() for line in file]  # 去掉换行符
+            self.lines = [line.strip() for line in file]  # Remove line breaks
 
     def __len__(self):
         return len(self.lines)
@@ -19,7 +19,7 @@ class T2IDataset(Dataset):
 #         self.dataset = pd.read_csv(file_path, sep='\t')
 #         prompts = self.dataset['Prompt'].tolist()
         
-#         self.lines = [line.strip() for line in prompts]  # 去掉换行符
+#         self.lines = [line.strip() for line in prompts]  # Remove line breaks
 
 #     def __len__(self):
 #         return len(self.lines)
@@ -30,15 +30,15 @@ class T2IDataset(Dataset):
 class Dataset(Dataset):
     def __init__(self, csv_path):
         self.dataset = pd.read_csv(csv_path)
-        # 检查列名是否存在，优先用 article/highlights
+        # Check if column names exist, prioritize article/highlights
         if 'article' in self.dataset.columns and 'highlights' in self.dataset.columns:
             self.texts = self.dataset['article'].tolist()
             self.references = self.dataset['highlights'].tolist()
         elif 'Prompt' in self.dataset.columns:
             self.texts = self.dataset['Prompt'].tolist()
-            self.references = None  # 无 reference 时设为 None
+            self.references = None  # Set to None when no reference
         else:
-            raise ValueError("CSV 必须包含 'article/highlights' 或 'Prompt' 列！")
+            raise ValueError("CSV must contain 'article/highlights' or 'Prompt' column!")
         self.lines = [line.strip() for line in self.texts]  
     def __len__(self):
         return len(self.lines)
