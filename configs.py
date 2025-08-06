@@ -43,18 +43,18 @@ def parse_args():
     parser.add_argument("--test_size", type=int, default=544, help="Size of the test dataset")
     parser.add_argument('--lora_rank', type=int, default=4,help='Rank of LoRA adaptation')
     parser.add_argument('--soft_train_batches', type=int, default=1, help='Number of batches to use for soft prompt optimization')
-    parser.add_argument("--soft_train", type=str, default="False",help="是否进行软提示优化")
-    parser.add_argument("--soft_lr", type=float, default=0.1, help="软提示优化学习率")
-    parser.add_argument("--soft_epochs", type=int, default=50, help="软提示优化轮数")
-    parser.add_argument("--mu", type=float, default=0.1,help="ZO-OGD扰动幅度")
-    parser.add_argument("--intrinsic_dim", type=int, default=10,help="软提示的内在维度")
-    parser.add_argument("--n_prompt_tokens", type=int, default=5,help="软提示的token数量")
-    parser.add_argument("--random_proj", type=str, default="uniform",choices=["normal", "uniform"],help="随机投影初始化方式")
+    parser.add_argument("--soft_train", type=str, default="False",help="Whether to perform soft prompt optimization")
+    parser.add_argument("--soft_lr", type=float, default=0.1, help="Learning rate for soft prompt optimization")
+    parser.add_argument("--soft_epochs", type=int, default=50, help="Number of epochs for soft prompt optimization")
+    parser.add_argument("--mu", type=float, default=0.1,help="Perturbation magnitude for ZO-OGD")
+    parser.add_argument("--intrinsic_dim", type=int, default=10,help="Intrinsic dimension of soft prompts")
+    parser.add_argument("--n_prompt_tokens", type=int, default=5,help="Number of tokens for soft prompts")
+    parser.add_argument("--random_proj", type=str, default="uniform",choices=["normal", "uniform"],help="Initialization method for random projection")
     args = parser.parse_args()
     
     if args.batch_size == 1:
         args.batch_mode = "single"
-    #黑盒模型
+    #Black-box model
     if args.black_model == "sd1.5":
         args.black_model = "sd-legacy/stable-diffusion-v1-5"
     elif args.black_model == "sd1.4":
@@ -69,36 +69,36 @@ def parse_args():
     elif args.black_model == "gpt-image-1":
         args.blackbox_mode = "image"
         args.black_model = "gpt-image-1"
-        args.black_token = "sk-t9NQplKFStDn3jRv870f8b26702948A2919bCf54E8C8D08e"
-        args.api_base = "https://api.vveai.com/v1"
+        args.black_token = "Replace with your own"
+        args.api_base = "Replace with your own"
     elif args.black_model == "gpt3.5-turbo":
         args.blackbox_mode = "text"
         args.black_model = "gpt-3.5-turbo"
-        args.black_token = "sk-zDDegMmitM5pTu5RF154006d7402487080F0A9D8Fd61D84a"
-        args.api_base = "https://api.vveai.com/v1"
+        args.black_token = "Replace with your own"
+        args.api_base = "Replace with your own"
     elif args.black_model == "gpt4-turbo":
         args.blackbox_mode = "text"
         args.black_model = "gpt-4-turbo"
-        args.black_token = "sk-zDDegMmitM5pTu5RF154006d7402487080F0A9D8Fd61D84a"
-        args.api_base = "https://api.vveai.com/v1"
+        args.black_token = "Replace with your own"
+        args.api_base = "Replace with your own"
     elif args.black_model == "claude3.5":
         args.blackbox_mode = "text"
         args.black_model = "claude-3-5-sonnet-all"
-        args.black_token = "sk-zDDegMmitM5pTu5RF154006d7402487080F0A9D8Fd61D84a"
-        args.api_base = "https://api.vveai.com/v1"
-    #更换提示词模板
+        args.black_token = "Replace with your own"
+        args.api_base = "Replace with your own"
+    #Change prompt template
     if args.dataset == "cnn_dailymail":
         args.example = "cnn_dailymail"
-    #白盒模型
+    #White-box model
     if args.white_model == "llama2-7b":
         args.white_model = "meta-llama/Llama-2-7b-hf"
-        args.hf_token = "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"
+        args.hf_token = "Replace with your own"
     elif args.white_model == "vicuna-13b":
         args.white_model = "lmsys/vicuna-13b-v1.3"
-        args.hf_token = "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"
+        args.hf_token = "Replace with your own"
     elif args.white_model == "vicuna-7b":
         args.white_model = "lmsys/vicuna-7b-v1.5"
-        args.hf_token = "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"
+        args.hf_token = "Replace with your own"
 
     args.device = torch.device("cuda", args.cuda)
 
