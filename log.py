@@ -3,14 +3,12 @@ import json
 import time
 from datetime import datetime
 class TrainingLogger:
-    """支持多训练模式、参数化命名的增强型日志系统"""
+    """Enhanced logging system supporting multiple training modes and parameterized naming"""
     def __init__(self, args):
-        # 构造唯一文件名
         # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.output_path=args.soft_output_dir#目前更改
+        self.output_path=args.soft_output_dir#Currently modified
         self.seed=args.seed
         
-        # 初始化元数据
         self.metadata = {
             'fixed_params': {
                 'dataset': args.dataset,
@@ -32,7 +30,7 @@ class TrainingLogger:
                 'lambda_3': args.lambda_3,
                 'output_dir': args.output_dir,
                 'seed': args.seed,
-                # 新增的超参数
+                # New hyperparameters
                 'soft_output_dir':args.soft_output_dir,
                 'soft_train': args.soft_train,
                 'soft_epochs': args.soft_epochs,
@@ -50,21 +48,21 @@ class TrainingLogger:
             'dynamic_logs': []
         }
         
-        # 保存初始配置
+        # Save initial configuration
         self._save_metadata()
 
     def _save_metadata(self):
-        """保存不可变参数到独立文件"""
+        """Save immutable parameters to a separate file"""
         with open(os.path.join(self.output_path, "train.jsonl"), 'w') as f:
             json.dump(self.metadata['fixed_params'], f, indent=2)
 
     def log_training_step(self, log_data):
-        """记录训练步骤的详细信息"""
-        # 添加时间戳
+        """Record detailed information of training steps"""
+        # Add timestamp
         log_data['timestamp'] = datetime.now().isoformat()
         self.metadata['dynamic_logs'].append(log_data)
         
-        # 实时写入到文件
+        # Write to file in real-time
         with open(os.path.join(self.output_path, "train.jsonl"), 'a') as f:
             f.write(json.dumps(log_data) + "\n")
 
