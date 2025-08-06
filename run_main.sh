@@ -4,13 +4,13 @@
 cuda=0
 dataset=cnn_dailymail #paintings, art, anime, DB, cnn_dailymail
 # seed=14 #paintings, art, anime, DB, cnn_dailymail
-white_model=llama2-7b #vicuna-13b vicuna-7b llama2-7b promtist sft
+white_model=vicuna-7b #vicuna-13b vicuna-7b llama2-7b promtist sft
 black_model=claude3.5 # sd1.5 dreamlike sdXL gpt-image-1 gpt3.5-turbo gpt4-turbo claude3.5
 optimizer=spsa #mmt spsa 
 h=0.001
 lr=1e-4 #1e-5 2e-5 5e-5 1e-4 1e-1 1e-2
 batch_size=2   #1 --> single, other --> batch
-epochs=2
+epochs=20
 train_size=64 #16 32 64 128 256
 test_size=128 #16 32 64 128 256
 n_directions=5
@@ -27,7 +27,7 @@ if [ "$black_model" = "gpt3.5-turbo" ] || [ "$black_model" = "gpt4-turbo" ] || [
 fi
 gene_image=False #True False
 soft_train=True #True False
-soft_epochs=2
+soft_epochs=20
 soft_lr=0.1
 mu=0.1
 intrinsic_dim=10
@@ -36,13 +36,13 @@ soft_train_batches=16
 soft_n_directions=1
 random_proj=uniform # normal uniform
 debug=False  # True False
-for seed in 14 42 81;do #14 42 81
+for seed in 14;do #14 42 81
 # for dataset in cnn_dailymail;do #14 42 81
     # cmd="python -m debugpy --listen 5678 --wait-for-client test.py --seed $seed"
-    # 构建基础目录路径（包含主要参数）
+    # Build base directory path (including main parameters)
     base_dir="./result/${dataset}/${white_model}_${black_model}_opt_${optimizer}_proj${random_proj}/samples_${train_size}_${test_size}_batch${batch_size}_lora_rank${lora_rank}/ep${epochs}_dir${n_directions}_lr${lr}_h${h}"
     
-    # 根据soft_train参数决定是否添加软提示相关参数到路径
+    # Determine whether to add soft prompt related parameters to the path based on soft_train parameter
     if [ "$soft_train" = "True" ]; then
         soft_params_dir="/soft_ep${soft_epochs}_lr${soft_lr}_mu${mu}/dim${intrinsic_dim}_tokens${n_prompt_tokens}_batches${soft_train_batches}_soft_n_dir${soft_n_directions}"
     fi
